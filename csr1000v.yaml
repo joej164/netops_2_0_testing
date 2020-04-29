@@ -1,0 +1,63 @@
+resources:
+    - name: student1-csr-test
+      properties:
+        canIpForward: true
+        disks:
+        - autoDelete: true
+          boot: true
+          deviceName: cisco-csr-1000v-vm-tmpl-boot-disk
+          initializeParams:
+            diskSizeGb: 10
+            diskType: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/zones/us-west1-a/diskTypes/pd-ssd
+            sourceImage: https://www.googleapis.com/compute/v1/projects/cisco-public/global/images/csr1000v1711byol
+          type: PERSISTENT
+        machineType: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/zones/us-west1-a/machineTypes/n1-standard-4
+        metadata:
+          items:
+          - key: ssh-keys
+            value: joej:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/KqJsGTXvEthCEpdv061lYNqyb+8hnhodp3wYZ01pIno7T/OGFJLHGRkGrAstk32/dABEc+o8Dlz3vBO3FExOgJH4x2z+pJj1rfYbq6wKTjFSNiznKC8fTFO/d2Tyz0bI8N9RpaZp5qyVIamsMer27AJum55YZwDhjU0uC/s6ouycpYV1lhefnM3H/WYUM7lrtLWmO6xx1wT5AkAFAjwEWwpvSg4hu3CHj+YHzb8qHTwZnzKpc5GJkwSAI1IOGCpZSgJFO5Kv0kQRlwGVYTJJfOkY/D6CBhKKg7iFyZjcligmMyRwf/qsoGRrwWrGupAxxGjna/tJ5rk2xeS2uO2a0zpwz6/8Y9xI7Ij95s7wIh/dmQ18L5WP1B0MyljTcWb4qt0c852fVschQO7RvPBAIXe0Y9IYqmFyGswDplPK2sFnAXUCA0ugxrGuzXzTG/aiGpLDP/GXx3+lagKgaqIAjZp0Kjb1a5U7qw7q4BwNF0Izb8vQXhE1nfwU6By8xdNN2cOumtd/AwAl3P5buC9ItMl5moWgcwwdnuRWSNNIjrK0rZoHKhBRpbPHVq0xVTahuZLGfvIeyVAaNJBF3lLXqoD7XacrTcwPvSgOGD6x6W0xvSlmVbJrLU/cIcKpAIne5HpS9qM7ogb3BqEzPNI41ZwjHTmnj6xF5i6VZdJ1bw==
+              joej@ignw.io
+        networkInterfaces:
+        - accessConfigs:
+          - name: External NAT
+            type: ONE_TO_ONE_NAT
+          network: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/global/networks/student-1
+          subnetwork: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/regions/us-west1/subnetworks/student-1-subnet
+        serviceAccounts:
+        - email: default
+          scopes:
+          - https://www.googleapis.com/auth/cloud.useraccounts.readonly
+          - https://www.googleapis.com/auth/devstorage.read_only
+          - https://www.googleapis.com/auth/logging.write
+          - https://www.googleapis.com/auth/monitoring.write
+        tags:
+          items:
+          - csr1000v1711byol-1-tcp-22
+          - csr1000v1711byol-1-tcp-80
+          - csr1000v1711byol-1-tcp-21
+        zone: us-west1-a
+      type: compute.v1.instance
+    - name: csr1000v1711byol-1-tcp-22-test
+      properties:
+        allowed:
+        - IPProtocol: TCP
+          ports:
+          - '22'
+        network: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/global/networks/student-1
+        sourceRanges:
+        - 0.0.0.0/0
+        targetTags:
+        - csr1000v1711byol-1-tcp-22
+      type: compute.v1.firewall
+    - name: csr1000v1711byol-1-tcp-80-test
+      properties:
+        allowed:
+        - IPProtocol: TCP
+          ports:
+          - '80'
+        network: https://www.googleapis.com/compute/v1/projects/jacobs-netops20-initialtesting/global/networks/student-1
+        sourceRanges:
+        - 0.0.0.0/0
+        targetTags:
+        - csr1000v1711byol-1-tcp-80
+      type: compute.v1.firewall

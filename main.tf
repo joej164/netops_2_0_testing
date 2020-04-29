@@ -24,6 +24,10 @@ resource "google_compute_subnetwork" "student-1-subnet" {
     ip_cidr_range = "10.0.0.0/24"
     region = "us-west1"
     network = google_compute_network.student-1.name
+    timeouts {
+        create = "4m"
+        delete = "4m"
+    }
 }
 
 
@@ -42,6 +46,49 @@ resource "google_compute_firewall" "student-1" {
         protocol = "tcp"
         ports = ["22"]
     }
+}
+
+resource "google_deployment_manager_deployment" "deployment" {
+  name = "my-deployment"
+
+  target {
+    config {
+      content = file("dm.yaml")
+    }
+  }
+
+  timeouts {
+    create = "4m"
+    delete = "4m"
+  }
+
+  labels {
+    key = "foo"
+    value = "bar"
+  }
+  depends_on = [google_compute_subnetwork.student-1-subnet]
+}
+
+
+resource "google_deployment_manager_deployment" "csr-deployment" {
+  name = "my-csr-deployment"
+
+  target {
+    config {
+      content = file("csr1000v.yaml")
+    }
+  }
+
+  timeouts {
+    create = "4m"
+    delete = "4m"
+  }
+
+  labels {
+    key = "foo"
+    value = "bar"
+  }
+  depends_on = [google_compute_subnetwork.student-1-subnet]
 }
 
 
