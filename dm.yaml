@@ -1,0 +1,15 @@
+resources:
+    - name: tiny-vm
+      type: compute.v1.instance
+      properties:
+        zone: us-central1-a
+        machineType: zones/us-central1-a/machineTypes/f1-micro
+        disks:
+        - deviceName: boot
+          type: PERSISTENT
+          boot: true
+          autoDelete: true
+          initializeParams:
+            sourceImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-2004-lts
+        networkInterfaces:
+        - network: global/networks/default
